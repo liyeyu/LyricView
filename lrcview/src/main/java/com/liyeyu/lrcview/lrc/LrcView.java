@@ -57,7 +57,7 @@ public class LrcView extends View {
     private float mLineSpace = 20;  // 行间距（包含在行高中）
     private float mScrollY = 0;  // 纵轴偏移量
     private float mVelocity = 0;  // 纵轴上的滑动速度
-    private float mTextSize = 16;  // 歌词内容文字大小
+    private float mTextSize = 14;  // 歌词内容文字大小
     private int mBtnWidth = 0;  // Btn 按钮的宽度
     private int mDefaultMargin = 15;
     private Rect mTimerBound;
