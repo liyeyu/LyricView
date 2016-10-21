@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 start();
-                parse();
+                parseMessy();
 //                parseUTF();
             }
         });
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void parse(){
+    public void parseMessy(){
         new LrcBuilder(new LrcBuilder.OnLrcLoadListener() {
             @Override
             public InputStream loadLrc(LrcBuilder builder) {
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             InputStream open = getAssets().open("双笙 - 故梦.lrc");
             LrcInfo lrcInfo = new LrcBuilder().parseLrcInfo(open);
             mLrcView.setLrcInfo(lrcInfo);
+            boolean has = mLrcView.hasLrc();
         } catch (IOException e) {
             e.printStackTrace();
         }

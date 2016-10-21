@@ -481,6 +481,11 @@ public class LrcView extends View {
         invalidateView();
     }
 
+    public boolean hasLrc(){
+        return mLrcInfo!=null && mLineCount>0;
+    }
+
+
     /**
      * 设置歌词文本内容字体大小
      * @param unit
