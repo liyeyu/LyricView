@@ -36,13 +36,13 @@ public class LrcView extends View {
     private final int MSG_PLAYER_SLIDE = 0x158;
     private final int MSG_PLAYER_HIDE = 0x157;
     private final int MSG_CLICK_HIDE = 0x156;
-    private int mBtnColor = Color.parseColor("#EFEFEF");  // 按钮颜色
-    private int mHintColor = Color.parseColor("#FFFFFF");  // 提示语颜色
-    private int mDefaultColor = Color.parseColor("#FFFFFF");  // 默认字体颜色
-    private int mIndicatorColor = Color.parseColor("#EFEFEF");  // 指示器颜色
-    private int mHighLightColor = Color.parseColor("#4FC5C7");  // 当前播放位置的颜色
-    private int mCurrentShowColor = Color.parseColor("#AAAAAA");  // 当前拖动位置的颜色
-    private int mCurrentClickColor = Color.parseColor("#66b3b3b3");  // 当前拖动位置的颜色
+    private int mBtnColor = Color.parseColor("#EFEFEF"); 
+    private int mHintColor = Color.parseColor("#FFFFFF");  
+    private int mDefaultColor = Color.parseColor("#FFFFFF");  
+    private int mIndicatorColor = Color.parseColor("#EFEFEF");  
+    private int mHighLightColor = Color.parseColor("#4FC5C7");  
+    private int mCurrentShowColor = Color.parseColor("#AAAAAA");  
+    private int mCurrentClickColor = Color.parseColor("#66b3b3b3");  
     private LrcInfo mLrcInfo;
     private int mWidth;
     private int mHeight;
@@ -53,25 +53,25 @@ public class LrcView extends View {
     private Paint mIndicatorPaint;
     private Paint mBtnPaint;
     private int mLineCount;
-    private float mLineHeight;  // 行高
-    private float mLineSpace = 20;  // 行间距（包含在行高中）
-    private float mScrollY = 0;  // 纵轴偏移量
-    private float mVelocity = 0;  // 纵轴上的滑动速度
-    private float mTextSize = 14;  // 歌词内容文字大小
-    private int mBtnWidth = 0;  // Btn 按钮的宽度
+    private float mLineHeight;  
+    private float mLineSpace = 20;  
+    private float mScrollY = 0; 
+    private float mVelocity = 0;  
+    private float mTextSize = 14;  
+    private int mBtnWidth = 0;  
     private int mDefaultMargin = 15;
     private Rect mTimerBound;
     private String mDefaultTime = "00:00";
     private String mDefaultHint = "LrcView";
-    private int mCurrentShowLine = 0;  // 当前拖动位置对应的行数
-    private int mCurrentPlayLine = 0;  // 当前播放位置对应的行数
-    private int mCurrentClickLine = 0;  // 当前点击行数
-    private int mMinStartUpSpeed = 1600;  // 最低滑行启动速度
+    private int mCurrentShowLine = 0; 
+    private int mCurrentPlayLine = 0;  
+    private int mCurrentClickLine = 0; 
+    private int mMinStartUpSpeed = 1600; 
 
-    private boolean mUserTouch = false;  // 判断当前用户是否触摸
-    private boolean mIndicatorShow = false;  // 判断当前滑动指示器是否显示
-    private boolean mSliding = false; //是否滑动
-    private boolean mClick = false; //是否点击
+    private boolean mUserTouch = false;  
+    private boolean mIndicatorShow = false;  
+    private boolean mSliding = false; 
+    private boolean mClick = false; 
     private Rect mBtnBound;
     private VelocityTracker mVelocityTracker;
     private float mDownX;
@@ -161,7 +161,7 @@ public class LrcView extends View {
         if(mLineCount>0){
             for (int i = 0; i < mLineCount; i++) {
                 LrcRow lrcRow = mLrcInfo.rows.get(i);
-                //mLineHeight * 0.3f 基线
+                //mLineHeight * 0.3f baseline
                 float y = mHeight * 0.5f + (i+0.5f) * mLineHeight - mLineHeight * 0.3f - mScrollY;
                 if(y + mLineHeight * 0.5f < 0) {
                     lrcRow.y = 0;
@@ -198,7 +198,7 @@ public class LrcView extends View {
                 }
                 canvas.drawText(lrcRow.content, x, y, mTextPaint);
             }
-             //滑动提示部分内容绘制
+             
             if(mIndicatorShow) {
                 drawPlayer(canvas);
                 drawIndicator(canvas);
@@ -227,11 +227,11 @@ public class LrcView extends View {
 
     private void drawPlayer(Canvas canvas) {
         mBtnBound = new Rect(mDefaultMargin,mHeight/2-mBtnWidth/2,mDefaultMargin+mBtnWidth,mHeight/2+mBtnWidth/2);
-        //圆中等腰三角形边长
+        //Circle of isosceles triangle side length
         float side = mBtnBound.width()* 0.4f;
-        //圆中等腰三角形中垂线
+        //Circle of isosceles triangle bisector
         float middle = (float) Math.sqrt(Math.pow(side, 2) - Math.pow(side * 0.5f, 2));
-        //外接圆与三角形最大差 与 半径差
+        //Radius of circumscribed circle and triangle biggest difference and poor
         float dr = Math.abs(mBtnBound.width() * 0.5f - (mBtnBound.width() - middle));
         Path path = new Path();
         path.moveTo(mBtnBound.centerX() - dr,mBtnBound.centerY() - side * 0.5f);
@@ -273,7 +273,7 @@ public class LrcView extends View {
         releaseVelocityTracker();
         mHandler.sendEmptyMessageDelayed(MSG_PLAYER_HIDE, 2000);
         if(mLineCount>0) {
-            setUserTouch(false);  // 用户手指离开屏幕，取消触摸标记
+            setUserTouch(false);
             if(mLineCount>0 && mScrollY < 0) {
                 smoothScrollTo(0);
                 return;
@@ -344,7 +344,7 @@ public class LrcView extends View {
     }
 
     /**
-     * 计算阻尼效果的大小
+     * Calculate the size of the damping effect
      * */
     private final int mMaxDampingDistance = 360;
     private float measureDampingDistance(float value02) {
@@ -378,14 +378,12 @@ public class LrcView extends View {
         }
     }
 
-    /**
-     * 滑行动画
-     * @param velocityY  滑动速度
-     * */
     private void doFlingAnimator(float velocityY) {
-        //注：     Math.abs(velocity)  < =  16000
-        float distance = (velocityY / Math.abs(velocityY) * Math.min((Math.abs(velocityY)/1000 * 50), 640));   // 计算就已当前的滑动速度理论上的滑行距离是多少
-        float to = Math.min(Math.max(0, (mScrollY - distance)), (mLineCount - 1) * mLineHeight);   // 综合考虑边界问题后得出的实际滑行距离
+        //  Math.abs(velocity)  < =  16000
+        // Computing has been the current sliding speed theoretically glide distance is how much
+        float distance = (velocityY / Math.abs(velocityY) * Math.min((Math.abs(velocityY)/1000 * 50), 640));
+        // Synthetically considering boundary problem after the actual sliding distance
+        float to = Math.min(Math.max(0, (mScrollY - distance)), (mLineCount - 1) * mLineHeight);
         mFlingAnimator = ValueAnimator.ofFloat(mScrollY, to);
         mFlingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -444,8 +442,8 @@ public class LrcView extends View {
     };
 
     /**
-     * 设置用户是否触摸的标记
-     * @param isUserTouch  标记用户是否触摸屏幕
+     * Sets whether the user to touch the markup
+     * @param isUserTouch
      * */
     private void setUserTouch(boolean isUserTouch) {
         if(mUserTouch == isUserTouch) {
@@ -458,7 +456,7 @@ public class LrcView extends View {
     }
 
     /**
-     * 获取当前滑动到的位置的当前时间
+     * Gets the current sliding to the location of the current time
      * */
     private String measureCurrentTime() {
         if(mCurrentShowLine<=mLineCount && mCurrentShowLine>0){
@@ -487,7 +485,7 @@ public class LrcView extends View {
 
 
     /**
-     * 设置歌词文本内容字体大小
+     * Set the lyrics text font size
      * @param unit
      * @param size
      * */
@@ -496,7 +494,7 @@ public class LrcView extends View {
     }
 
     /**
-     * 设置歌词文本内容字体大小
+     * Set the lyrics text font size
      * @param size
      * */
     public void setTextSize(float size) {
@@ -508,8 +506,8 @@ public class LrcView extends View {
         updateLrcView();
     }
     /**
-     * 设置歌词内容行间距
-     * @param lineSpace  行间距大小
+     * Set the lyrics content line spacing
+     * @param lineSpace
      * */
     public void setLineSpace(float lineSpace) {
         mLineSpace = getRawSize(TypedValue.COMPLEX_UNIT_SP, lineSpace);
@@ -523,8 +521,8 @@ public class LrcView extends View {
     }
 
     /**
-     * 设置高亮显示文本的字体颜色
-     * @param color  颜色值
+     * Set the highlighted text font color
+     * @param color
      * */
     public void setHighLightTextColor(int color) {
         if(mHighLightColor != color) {
@@ -538,15 +536,15 @@ public class LrcView extends View {
     }
 
     /**
-     * 重置、设置歌词内容被重置后的提示内容
-     * @param message  提示内容
+     * Reset and set the lyrics content is reset after prompt content
+     * @param message
      * */
     public void reset(String message) {
         mDefaultHint = message;
         resetView();
     }
     /**
-     * 初始化控件
+     * The initial view
      * */
     private void resetView() {
         mCurrentPlayLine = mCurrentShowLine = 0;
@@ -575,13 +573,13 @@ public class LrcView extends View {
     }
     /**
      * Input current showing line to measure the view's current scroll Y
-     * @param line  当前指定行号
+     * @param line  The current line number specified
      * */
     private float measureCurrentScrollY(int line) {
         return (line - 1) * mLineHeight;
     }
     /**
-     * 计算行高度
+     * Calculate the line height
      * */
     private void measureLineHeight() {
         Rect rect = new Rect();
@@ -589,15 +587,15 @@ public class LrcView extends View {
         mLineHeight = rect.height()+mLineSpace;
     }
     /**
-     * 设置当前时间显示位置
-     * @param current  时间戳
+     * Set the current time display position;
+     * @param current
      * */
     public void setCurrentTimeMillis(long current) {
         scrollToCurrentTimeMillis(current);
     }
     /**
-     * 根据当前给定的时间戳滑动到指定位置
-     * @param time  时间戳
+     * According to the given current timestamp sliding to the specified location
+     * @param time
      * */
     private void scrollToCurrentTimeMillis(long time) {
         int pos = 0;
@@ -673,8 +671,8 @@ public class LrcView extends View {
     }
 
     /**
-     * 判断当前点击事件是否落在播放按钮触摸区域范围内
-     * @param event  触摸事件
+     * Determine whether the current click event falling within the scope of the play button touch are
+     * @param event
      * */
     private boolean clickPlayer(MotionEvent event) {
         if(mBtnBound != null &&  mDownX > (mBtnBound.left - mDefaultMargin)
@@ -691,8 +689,8 @@ public class LrcView extends View {
     }
 
     /**
-     * 设置播放按钮点击监听事件
-     * @param mClickListener  监听器
+     * Set the play button click to monitor events
+     * @param mClickListener
      * */
     public void setOnPlayerClickListener(OnPlayerClickListener mClickListener) {
         this.mClickListener = mClickListener;

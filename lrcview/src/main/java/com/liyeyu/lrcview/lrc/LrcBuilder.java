@@ -212,10 +212,9 @@ public class LrcBuilder extends ILrcBuilder{
     }
 
     /**
-     * 判断字符串是否是乱码
-     *
-     * @param code 字符串
-     * @return 是否是乱码
+     * Determine whether a string is messy code
+     * @param code
+     * @return isMessy
      */
     public static boolean isMessyCode(String code) {
         if(TextUtils.isEmpty(code)){
@@ -245,10 +244,10 @@ public class LrcBuilder extends ILrcBuilder{
 
     }
     /**
-     * 判断字符是否是中文
+     * Determine whether the Chinese characters
      *
-     * @param c 字符
-     * @return 是否是中文
+     * @param c
+     * @return
      */
     public static boolean isChinese(char c) {
         Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
