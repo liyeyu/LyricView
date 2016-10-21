@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LrcView">
+        <attr name="lrc_shader_offset" format="float"/>
+        <attr name="lrc_btn_color" format="color"/>
+        <attr name="lrc_hint_color" format="color"/>
+        <attr name="lrc_default_color" format="color"/>
+        <attr name="lrc_indicator_color" format="color"/>
+        <attr name="lrc_high_light_color" format="color"/>
+        <attr name="lrc_current_show_color" format="color"/>
+        <attr name="lrc_indicator_size" format="dimension"/>
+        <attr name="lrc_line_space" format="dimension"/>
+        <attr name="lrc_text_size" format="dimension"/>
+    </declare-styleable>
+</resources>
