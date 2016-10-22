@@ -1,7 +1,6 @@
 package com.liyeyu.lrcview.lrc;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,6 +44,10 @@ public class LrcBuilder extends ILrcBuilder{
         mCharsets.add(LrcTag.CHARSET_GBK);
     }
 
+    public void setLoadListener(OnLrcLoadListener loadListener) {
+        mLoadListener = loadListener;
+    }
+
     public LrcInfo parseLrcFromFile(String path) {
         LrcInfo result = null;
         if(TextUtils.isEmpty(path)){
@@ -69,24 +72,82 @@ public class LrcBuilder extends ILrcBuilder{
         if(TextUtils.isEmpty(musicPath)){
             return null;
         }
-        File file = new File(musicPath);
-        String name = file.getName();
-        for (int i = 0; i < suffix.size(); i++) {
-            file = new File(name+"."+suffix.get(i));
-            if(file.exists()){
-                curLrcPath = file.getPath();
-                break;
-            }else{
-                curLrcPath = name + suffix.get(0);
-            }
-        }
+        parseMusicPath(musicPath);
         return parseLrcFromFile(curLrcPath);
     }
 
+    protected boolean parseMusicPath(String musicPath){
+        if(TextUtils.isEmpty(musicPath)){
+            return false;
+        }
+        int indexOf = musicPath.lastIndexOf(".");
+        if(indexOf!=-1){
+            musicPath = musicPath.substring(0,indexOf);
+        }
+        for (int i = 0; i < suffix.size(); i++) {
+            File file = new File(musicPath+"."+suffix.get(i));
+            if(file.exists()){
+                curLrcPath = file.getPath();
+                return true;
+            }
+            if(i == suffix.size()-1){
+                curLrcPath = musicPath +"."+ suffix.get(0);
+            }
+        }
+        return false;
+    }
+    protected boolean parseLrcPath(String lrcPath){
+        if(TextUtils.isEmpty(lrcPath)){
+            return false;
+        }
+        File file = new File(lrcPath);
+        if(file.exists()){
+            curLrcPath = file.getPath();
+            return true;
+        }else{
+            curLrcPath = file.getName() + suffix.get(0);
+        }
+        return false;
+    }
+
+    public InputStream getInputStreamFromMusic(String musicPath){
+        try {
+            if(parseMusicPath(musicPath)){
+                return new FileInputStream(curLrcPath);
+            }else{
+                if(mLoadListener!=null){
+                    mLoadListener.onLoad(this,null);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            if(mLoadListener!=null){
+                mLoadListener.onLoad(this,null);
+            }
+        }
+        return null;
+    }
+    public InputStream getInputStreamFromLrc(String lrcPath){
+        try {
+            if(parseLrcPath(lrcPath)){
+                return new FileInputStream(curLrcPath);
+            }else{
+                if(mLoadListener!=null){
+                    mLoadListener.onLoad(this,null);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            if(mLoadListener!=null){
+                mLoadListener.onLoad(this,null);
+            }
+        }
+        return null;
+    }
 
     @Override
     protected void parseLrcRow(String line,LrcInfo lrcInfo) {
-        Log.i("parseLrcRow",line+"\n");
+//        Log.i("parseLrcRow",line+"\n");
         int startTag = line.indexOf("[");
         int endTag = line.indexOf("]");
         if(startTag!=0){
@@ -134,7 +195,7 @@ public class LrcBuilder extends ILrcBuilder{
         mIsShowMetaDate = isShowMetaDate;
     }
 
-    private void addLrcMetaDate(String content,LrcInfo lrcInfo){
+    protected void addLrcMetaDate(String content,LrcInfo lrcInfo){
         if(!TextUtils.isEmpty(content) && mIsShowMetaDate){
             lrcInfo.rows.add(new LrcRow(LrcInfo.DEFAULT_TIME,0,content));
         }
@@ -151,7 +212,7 @@ public class LrcBuilder extends ILrcBuilder{
         return time;
     }
 
-    private LrcInfo parseLrcInfo(InputStream inputStream,String charsetName) {
+    protected LrcInfo parseLrcInfo(InputStream inputStream,String charsetName) {
         LrcInfo lrcInfo = null;
         charsetPos = mCharsets.indexOf(charsetName);
         if(inputStream!=null){
@@ -177,10 +238,11 @@ public class LrcBuilder extends ILrcBuilder{
                     isMessyCode = false;
                     mLoadListener.onLoad(this,lrcInfo);
                 }
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                if(mLoadListener!=null){
+                    mLoadListener.onLoad(this,null);
+                }
             }finally {
                 closeReader(new Reader[]{in,reader});
             }
@@ -188,7 +250,7 @@ public class LrcBuilder extends ILrcBuilder{
         return lrcInfo;
     }
 
-    private void closeReader(Reader ...readers){
+    protected void closeReader(Reader ...readers){
         try {
             if(readers!=null){
                 for (Reader reader:readers) {

@@ -39,7 +39,7 @@ ext {
     siteUrl = 'https://github.com/liyeyu/SupportUtils'
     gitUrl = 'https://github.com/liyeyu/SupportUtils.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.3beta1'
 
     developerId = 'liyeyu'
     developerName = 'liyeyu'

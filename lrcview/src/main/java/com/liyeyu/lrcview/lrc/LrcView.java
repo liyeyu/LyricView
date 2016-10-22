@@ -72,6 +72,7 @@ public class LrcView extends View {
     private boolean mIndicatorShow = false;  
     private boolean mSliding = false; 
     private boolean mClick = false; 
+    private boolean mIsDrawClickRect = false;
     private Rect mBtnBound;
     private VelocityTracker mVelocityTracker;
     private float mDownX;
@@ -81,7 +82,7 @@ public class LrcView extends View {
     private OnPlayerClickListener mClickListener;
     private ValueAnimator mFlingAnimator;
     private long mCurrentDownTime;
-    private OnPlayerTouchListener mOnTouchListener;
+    private OnLrcClickListener mOnTouchListener;
 
 
     public LrcView(Context context) {
@@ -191,7 +192,7 @@ public class LrcView extends View {
                 }
                 lrcRow.x = x;
                 lrcRow.y = mHeight * 0.5f + i * mLineHeight - 0.5f * mLineHeight - mScrollY;
-                if(mCurrentClickLine == i+1){
+                if(mCurrentClickLine == i+1 && mIsDrawClickRect){
                     Rect rect = new Rect(0,(int)lrcRow.y,mWidth,(int)(lrcRow.y+mLineHeight));
                     mTextPaint.setColor(mCurrentClickColor);
                     canvas.drawRect(rect,mTextPaint);
@@ -313,8 +314,10 @@ public class LrcView extends View {
                 }
             }
             if(l>1000){
+                mIsDrawClickRect = true;
                 mOnTouchListener.onLongClick(this,mCurrentClickLine,content);
             }else{
+                mIsDrawClickRect = false;
                 mOnTouchListener.onClick(this,mCurrentClickLine,content);
             }
             mHandler.sendEmptyMessageDelayed(MSG_CLICK_HIDE,500);
@@ -695,7 +698,7 @@ public class LrcView extends View {
     public void setOnPlayerClickListener(OnPlayerClickListener mClickListener) {
         this.mClickListener = mClickListener;
     }
-    public void setOnLrcViewTouchListener(OnPlayerTouchListener mOnTouchListener) {
+    public void setOnLrcViewTouchListener(OnLrcClickListener mOnTouchListener) {
         this.mOnTouchListener = mOnTouchListener;
     }
 
@@ -706,7 +709,7 @@ public class LrcView extends View {
     public interface OnPlayerClickListener {
         public void onPlayerClicked(long progress, String content);
     }
-    public interface OnPlayerTouchListener {
+    public interface OnLrcClickListener {
         public void onClick(View view,int line,String content);
         public void onLongClick(View view,int line,String content);
     }

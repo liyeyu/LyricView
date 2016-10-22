@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 mMediaPlayer.seekTo((int) progress);
             }
         });
-        mLrcView.setOnLrcViewTouchListener(new LrcView.OnPlayerTouchListener(){
+        mLrcView.setOnLrcViewTouchListener(new LrcView.OnLrcClickListener(){
             @Override
             public void onClick(View view, int line, String content) {
                 Log.i("actionUp","line:"+line+" "+content);
